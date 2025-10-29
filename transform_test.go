@@ -64,3 +64,40 @@ func TestTransformSmartCn2an(t *testing.T) {
 		}
 	}
 }
+
+func TestTransformMathSymbols(t *testing.T) {
+	tr := NewTransform()
+	cases := map[string]string{
+		"1+2-3":              "一加二减三",
+		"x-y":                "x减y",
+		"-y":                 "负y",
+		"a/b":                "a除以b",
+		"x>=y":               "x大于等于y",
+		"x<=y":               "x小于等于y",
+		"a!=b":               "a不等于b",
+		"∑x_i":               "求和x_i",
+		"∵A>0, ∴B>0":         "因为A大于零, 所以B大于零",
+		"∫f(x)dx":            "积分f(x)dx",
+		"A∪B":                "A并集B",
+		"A∩B":                "A交集B",
+		"sigma=0":            "求和等于零",
+		"πr^2":               "派r的二次方",
+		"∞>0":                "无穷大大于零",
+		"go-cn2an":           "go-cn二an",
+		"http://example.com": "http://example.com",
+		"x=y":                "x等于y",
+		"x^2":                "x的二次方",
+		"√9":                 "根号九",
+		"|x|":                "x的绝对值",
+	}
+
+	for input, expected := range cases {
+		result, err := tr.Transform(input, "an2cn")
+		if err != nil {
+			t.Fatalf("Transform(%q, an2cn) error: %v", input, err)
+		}
+		if result != expected {
+			t.Errorf("Transform(%q, an2cn) = %q, want %q", input, result, expected)
+		}
+	}
+}

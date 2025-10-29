@@ -16,6 +16,16 @@
 - Handles negatives and decimals (up to 16 fractional digits).
 - Supports values in the range `[10^-16, 10^16]`.
 
+### Supported Capabilities
+
+| Category | Direction | Details / Examples |
+| --- | --- | --- |
+| Core numerals | Chinese → Arabic | Strict / normal / smart modes; uppercase numerals; colloquial forms; negatives and decimals; range `10^-16` ~ `10^16`. |
+| Core numerals | Arabic → Chinese | low / up / rmb / direct modes; negatives; decimals; RMB wording. |
+| Sentence transform | Chinese → Arabic | Automatically recognises dates, fractions, percentages, Celsius expressions, and colloquial numbers. |
+| Sentence transform | Arabic → Chinese | Handles dates, fractions, percentages, Celsius. |
+| Math symbol reading | Symbols → Chinese wording | `+`→`加` (plus), `-`→`减` (minus), `*`/`×`→`乘` (times), `÷`/`/`→`除以` (divide), `=`→`等于` (equals), `<`/`≤`/`>`/`≥` comparators, `!=`/`≠`→`不等于` (not equal), `±`/`∓`→`正负`/`负正`, `^`→`…次方`, `√`→`根号` (square root), `|x|`→`x的绝对值`, `∑`/`Sigma`→`求和`, `∫`→`积分`, `∞`→`无穷大`, `π`→`派`, `∂`→`偏导`, `∪`→`并集`, `∩`→`交集`, `∵`→`因为`, `∴`→`所以`. |
+
 ## Installation
 
 ```bash
