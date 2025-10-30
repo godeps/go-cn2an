@@ -101,3 +101,16 @@ func TestTransformMathSymbols(t *testing.T) {
 		}
 	}
 }
+
+func TestTransformAn2cnDateWithSpaces(t *testing.T) {
+	tr := NewTransform()
+	input := "现在是2025 年 10 月 30 日"
+	expected := "现在是二零二五年十月三十日"
+	got, err := tr.Transform(input, "an2cn")
+	if err != nil {
+		t.Fatalf("Transform(%q, an2cn) error: %v", input, err)
+	}
+	if got != expected {
+		t.Errorf("Transform(%q, an2cn) = %q, want %q", input, got, expected)
+	}
+}
