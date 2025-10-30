@@ -63,7 +63,6 @@ func NewTransform() *Transform {
 		"✖", "乘",
 		"⋅", "乘",
 		"·", "乘",
-		"*", "乘",
 		"÷", "除以",
 		"±", "正负",
 		"∓", "负正",
@@ -404,6 +403,7 @@ func (t *Transform) postprocessAn2cnMathSymbols(s string) string {
 		s = t.mathSymbolReplacer.Replace(s)
 	}
 	s = t.replaceSlashSymbols(s)
+	s = t.replaceAsteriskSymbols(s)
 	s = t.convertRemainingMinus(s)
 
 	return s
@@ -446,6 +446,30 @@ func (t *Transform) replaceSlashSymbols(s string) string {
 		if r == '/' {
 			if t.isDivisionSlash(runes, i) {
 				builder.WriteString("除以")
+			} else {
+				builder.WriteRune(r)
+			}
+			continue
+		}
+		builder.WriteRune(r)
+	}
+
+	return builder.String()
+}
+
+func (t *Transform) replaceAsteriskSymbols(s string) string {
+	runes := []rune(s)
+	if len(runes) == 0 {
+		return s
+	}
+
+	var builder strings.Builder
+	builder.Grow(len(runes) * 2)
+	for i := 0; i < len(runes); i++ {
+		r := runes[i]
+		if r == '*' {
+			if t.isMultiplicationAsterisk(runes, i) {
+				builder.WriteString("乘")
 			} else {
 				builder.WriteRune(r)
 			}
@@ -573,6 +597,21 @@ func (t *Transform) isDivisionSlash(runes []rune, idx int) bool {
 		return false
 	}
 	if isURLSlash(runes, idx) {
+		return false
+	}
+	if !isSlashOperand(prev) || !isSlashOperand(next) {
+		return false
+	}
+	return true
+}
+
+func (t *Transform) isMultiplicationAsterisk(runes []rune, idx int) bool {
+	prevIdx, prev := previousNonSpaceRune(runes, idx)
+	nextIdx, next := nextNonSpaceRune(runes, idx)
+	if prevIdx == -1 || nextIdx == -1 {
+		return false
+	}
+	if runes[prevIdx] == '*' || runes[nextIdx] == '*' {
 		return false
 	}
 	if !isSlashOperand(prev) || !isSlashOperand(next) {

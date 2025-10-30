@@ -114,3 +114,16 @@ func TestTransformAn2cnDateWithSpaces(t *testing.T) {
 		t.Errorf("Transform(%q, an2cn) = %q, want %q", input, got, expected)
 	}
 }
+
+func TestTransformAn2cnKeepsMarkdownAsterisks(t *testing.T) {
+	tr := NewTransform()
+	input := "哈喽～现在是 **2025年10月30日 晚上10点02分*"
+	expected := "哈喽～现在是 **二零二五年十月三十日 晚上十点二分*"
+	got, err := tr.Transform(input, "an2cn")
+	if err != nil {
+		t.Fatalf("Transform(%q, an2cn) error: %v", input, err)
+	}
+	if got != expected {
+		t.Errorf("Transform(%q, an2cn) = %q, want %q", input, got, expected)
+	}
+}
