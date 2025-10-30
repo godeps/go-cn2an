@@ -134,7 +134,7 @@ func (t *Transform) Transform(inputs, method string) (string, error) {
 		inputs = t.preprocessAn2cnMathSymbols(inputs)
 
 		// 日期
-		dateRe := regexp.MustCompile(`(\d{2,4}年)?(\d{1,2}月)?(\d{1,2}日)?`)
+		dateRe := regexp.MustCompile(`(?:\d{2,4}\s*年\s*(?:\d{1,2}\s*月\s*)?(?:\d{1,2}\s*日)?)|(?:\d{1,2}\s*月\s*(?:\d{1,2}\s*日)?)|(?:\d{1,2}\s*日)`)
 		inputs = dateRe.ReplaceAllStringFunc(inputs, func(match string) string {
 			return t.subUtil(match, "an2cn", "date")
 		})
@@ -247,8 +247,12 @@ func (t *Transform) subUtil(inputs, method, subMode string) string {
 	} else if method == "an2cn" {
 		switch subMode {
 		case "date":
+			normalized := strings.Join(strings.Fields(inputs), "")
+			if normalized == "" {
+				return inputs
+			}
 			yearRe := regexp.MustCompile(`\d+年`)
-			result := yearRe.ReplaceAllStringFunc(inputs, func(match string) string {
+			result := yearRe.ReplaceAllStringFunc(normalized, func(match string) string {
 				digits := strings.TrimSuffix(match, "年")
 				if digits == "" {
 					return match
